@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.volvo.phoenix.document.uploadtool.application.UploadToolServiceIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 5, Time elapsed: 14.746 sec - in com.volvo.phoenix.document.uploadtool.application.UploadToolServiceIntegrationTest

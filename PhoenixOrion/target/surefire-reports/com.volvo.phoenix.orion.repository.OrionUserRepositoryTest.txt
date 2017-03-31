@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.volvo.phoenix.orion.repository.OrionUserRepositoryTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.756 sec - in com.volvo.phoenix.orion.repository.OrionUserRepositoryTest

@@ -1,0 +1,380 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="create-upload-tool-operation-table" author="a232877">
+
+    <createSequence cycle="false" incrementBy="1" sequenceName="UT_OPERATION_SEQ" startValue="5000" />
+
+    <createTable tableName="UT_OPERATION">
+      <column name="ID" type="BIGINT">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="VERSION" type="BIGINT" />
+      <column name="USERNAME" type="VARCHAR(50)" />
+      <column name="FOLDER_ID" type="BIGINT">
+        <constraints foreignKeyName="" nullable="false" />
+      </column>
+      <column name="CREATE_DATE" type="date" />
+      <column name="MODIFIED_DATE" type="date" />
+      <column name="STATUS" type="varchar(10)" /> 
+    </createTable>
+    
+    <addForeignKeyConstraint 
+      baseColumnNames="FOLDER_ID" 
+      baseTableName="UT_OPERATION"
+      constraintName="UT_OPERATION_FOLDER_FK"
+      referencedColumnNames="NODE_ID"
+      referencedTableName="VT_PHOENIX_TREE" />
+      
+    <sql>
+      create or replace public synonym UT_OPERATION_SEQ for "V0PHOENIX"."UT_OPERATION_SEQ";
+      create or replace public synonym UT_OPERATION for "V0PHOENIX"."UT_OPERATION";
+    </sql>
+  
+    <rollback>
+      drop public synonym UT_OPERATION_SEQ";
+      drop public synonym UT_OPERATION";
+    </rollback>
+  </changeSet>
+  
+  <changeSet id="create-upload-tool-operation-file" author="bpl3195">
+      
+      <createSequence cycle="false" incrementBy="1" sequenceName="UT_OPERATION_FILE_SEQ" startValue="5000" />
+  
+      <createTable tableName="UT_OPERATION_FILE">
+        <column name="ID" type="BIGINT">
+          <constraints primaryKey="true" nullable="false" />
+        </column>
+        <column name="OPERATION_ID" type="BIGINT">
+           <constraints nullable="false" />
+        </column>
+        <column name="VERSION" type="BIGINT" />
+        <column name="FILE_NAME" type="VARCHAR(255)">
+           <constraints nullable="false" />
+        </column>
+        <column name="TYPE" type="CHAR(1)">
+           <constraints nullable="false" />
+        </column>
+        <column name="HAS_METADATA" type="BOOLEAN">
+          <constraints nullable="false" />
+        </column>  
+     </createTable>
+     
+     <addForeignKeyConstraint 
+         baseColumnNames="OPERATION_ID" 
+         baseTableName="UT_OPERATION_FILE" 
+         constraintName="UT_OPERATION_FILE_OPERATION_FK" 
+         referencedColumnNames="ID"
+         referencedTableName="UT_OPERATION" />
+         
+     <sql>
+      create or replace public synonym UT_OPERATION_FILE for "V0PHOENIX"."UT_OPERATION_FILE";
+      create or replace public synonym UT_OPERATION_FILE_SEQ for "V0PHOENIX"."UT_OPERATION_FILE_SEQ";
+    </sql>
+
+    <rollback>
+      drop public synonym UT_OPERATION_FILE";
+      drop public synonym UT_OPERATION_FILE_SEQ";
+    </rollback>
+  </changeSet>
+  
+  <changeSet id="create-upload-tool-operation-tree" author="bpl3195">
+  
+      <createSequence cycle="false" incrementBy="1" sequenceName="UT_OPERATION_TREE_SEQ" startValue="5000" />
+       
+      <createTable tableName="UT_OPERATION_TREE">
+        <column name="OPERATION_ID" type="BIGINT">
+           <constraints nullable="false" />
+        </column>
+        <column name="NODE_ID" type="BIGINT">
+          <constraints primaryKey="true" nullable="false" />
+        </column>
+        <column name="NODE_PARENT_ID" type="BIGINT"/>
+        <column name="VERSION" type="BIGINT" />
+        <column name="NODE_TEXT" type="VARCHAR(255)">
+           <constraints nullable="false" />
+        </column>
+        <column name="NODE_TYPE" type="CHAR(1)">
+           <constraints nullable="false" />
+        </column>
+        <column name="REV" type="VARCHAR(4)"/>
+     </createTable>
+     
+     <addForeignKeyConstraint 
+         baseColumnNames="OPERATION_ID" 
+         baseTableName="UT_OPERATION_TREE" 
+         constraintName="UT_OPERATION_TREE_OPERATION_FK" 
+         referencedColumnNames="ID"
+         referencedTableName="UT_OPERATION" />
+
+     <sql>
+         create or replace public synonym UT_OPERATION_TREE for "V0PHOENIX"."UT_OPERATION_TREE";
+         create or replace public synonym UT_OPERATION_TREE_SEQ for "V0PHOENIX"."UT_OPERATION_TREE_SEQ";
+     </sql>
+
+     <rollback>
+         drop public synonym UT_OPERATION_TREE;
+         drop public synonym UT_OPERATION_TREE_SEQ";
+     </rollback>
+              
+  </changeSet>
+ 
+  <changeSet id="table-upload-tool-document-attribute" author="bpl3195">
+
+      <createTable tableName="UT_DOCUMENT_ATTRIBUTE">
+        <column name="NODE_ID" type="BIGINT">
+           <constraints nullable="false" />
+        </column>
+        <column name="NAME" type="VARCHAR(50)">
+           <constraints nullable="false" />
+        </column>
+        <column name="VALUE" type="VARCHAR(255)"/>
+     </createTable>
+           
+     <addForeignKeyConstraint 
+         baseColumnNames="NODE_ID" 
+         baseTableName="UT_DOCUMENT_ATTRIBUTE" 
+         constraintName="UT_DOCATTR_TREE_OPERATION_FK" 
+         referencedColumnNames="NODE_ID"
+         referencedTableName="UT_OPERATION_TREE" />    
+         
+     <sql>
+         create or replace public synonym UT_DOCUMENT_ATTRIBUTE for "V0PHOENIX"."UT_DOCUMENT_ATTRIBUTE";
+     </sql>
+
+     <rollback>
+         drop public synonym UT_DOCUMENT_ATTRIBUTE;
+     </rollback>                   
+  </changeSet>  
+  
+  <changeSet id="create-upload-tool-document-table" author="bpl3195">
+  
+    <createSequence cycle="false" incrementBy="1" sequenceName="UT_DOCUMENT_SEQ" startValue="5000" />
+
+    <createTable tableName="UT_DOCUMENT">
+      <column name="ID" type="BIGINT">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="TREE_NODE_ID" type="BIGINT" />      
+      <column name="TITLE" type="VARCHAR(200)" />
+      <column name="NAME" type="VARCHAR(100)" />
+      <column name="REVISION" type="BIGINT" />      
+      <column name="STATE_ID" type="BIGINT" />
+      <column name="FAMILY_ID" type="BIGINT" />
+      <column name="DOCTYPE_ID" type="BIGINT" />
+      <column name="DOCUMENT_STATUS" type="VARCHAR(30)" />
+      <column name="DESCRIPTION" type="VARCHAR(200)" />
+      <column name="AUTHOR" type="VARCHAR(50)" />
+      <column name="ISSUER" type="VARCHAR(50)" />
+      <column name="ISSUER_ID" type="VARCHAR(255)" />
+      <column name="AUTHOR_ID" type="VARCHAR(255)" />
+      <column name="ISSUE_DATE" type="DATE" />
+      <column name="NOTES" type="VARCHAR(1000)" />
+      <column name="ALT_DOC_ID" type="VARCHAR(100)" />
+      <column name="PROTECT_IN_WORK" type="BOOLEAN" />
+    </createTable>
+    
+   <addForeignKeyConstraint 
+         baseColumnNames="TREE_NODE_ID" 
+         baseTableName="UT_DOCUMENT" 
+         constraintName="UT_DOCUMENT_TREENODE_FK" 
+         referencedColumnNames="NODE_ID"
+         referencedTableName="UT_OPERATION_TREE" />
+
+    <sql>
+      create or replace public synonym UT_DOCUMENT for "V0PHOENIX"."UT_DOCUMENT";
+      create or replace public synonym UT_DOCUMENT_SEQ for "V0PHOENIX"."UT_DOCUMENT_SEQ";
+    </sql>
+
+    <rollback>
+      drop public synonym UT_DOCUMENT_SEQ;
+      drop public synonym UT_DOCUMENT;
+    </rollback>
+    
+  </changeSet>
+  
+
+  <changeSet id="create-upload-tool-document-attribute-value" author="bpl3195">
+  
+    <createTable tableName="UT_DOCUMENT_ATTRIBUTE_VALUE">
+      <column name="DOCUMENT_ID" type="BIGINT">
+         <constraints nullable="false" />
+      </column>
+      <column name="ATTRIBUTE_ID" type="BIGINT">
+         <constraints nullable="false" />
+      </column>
+      <column name="VALUE" type="VARCHAR(50)" />
+    </createTable>
+    
+    <addForeignKeyConstraint 
+         baseColumnNames="DOCUMENT_ID" 
+         baseTableName="UT_DOCUMENT_ATTRIBUTE_VALUE" 
+         constraintName="UT_DOC_ATTRIBUTE_VALUE_DOC_FK" 
+         referencedColumnNames="ID"
+         referencedTableName="UT_DOCUMENT" />
+   
+    <sql>
+      create or replace public synonym UT_DOCUMENT_ATTRIBUTE_VALUE for "V0PHOENIX"."UT_DOCUMENT_ATTRIBUTE_VALUE";
+    </sql>
+
+    <rollback>
+      drop public synonym UT_DOCUMENT_ATTRIBUTE_VALUE;
+    </rollback>
+    
+  </changeSet> 
+  
+  <changeSet id="add-column-isvalid-ut_operation_tree" author="bpl3195">
+  
+    <addColumn tableName="UT_OPERATION_TREE">
+        <column name="IS_VALID" type="BOOLEAN" defaultValue="0">
+          <constraints nullable="false" />
+        </column>  
+    </addColumn>
+  
+  </changeSet> 
+  
+	<changeSet id="create table for document defaults atributes" author="a226632">
+     <createTable tableName="VT_PHOENIX_DOC_DEF_ATTRIBUTE">
+      <column name="FOLDER_ID" type="BIGINT">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="DOCUMENT_FAMILY_ID" type="BIGINT" />      
+      <column name="DOCUMENT_TYPE_ID" type="BIGINT" />
+      <column name="INFO_CLASS_ID" type="BIGINT" />
+      <column name="WORK_STATUS" type="VARCHAR(50)" />      
+     </createTable>
+    </changeSet> 
+    
+    <changeSet id="VT_PHOENIX_DOC_DEF_ATTRIBUTE_synonyms_and_constraints" author="bpl3195">
+    
+      <addForeignKeyConstraint 
+           baseColumnNames="FOLDER_ID" 
+           baseTableName="VT_PHOENIX_DOC_DEF_ATTRIBUTE" 
+           constraintName="DOC_DEF_ATTRIBUTE_TREE_FK" 
+           referencedColumnNames="NODE_ID"
+           referencedTableName="VT_PHOENIX_TREE" />
+     
+      <sql>
+        create or replace public synonym VT_PHOENIX_DOC_DEF_ATTRIBUTE for "V0PHOENIX"."VT_PHOENIX_DOC_DEF_ATTRIBUTE";
+      </sql>
+  
+      <rollback>
+        drop public synonym VT_PHOENIX_DOC_DEF_ATTRIBUTE;
+      </rollback>
+    </changeSet>  
+    
+    <changeSet id="add-ID-upload-tool-document-attribute-value" author="bpl3195">
+  
+    <addColumn tableName="UT_DOCUMENT_ATTRIBUTE_VALUE">
+        <column name="ID" type="BIGINT">
+          <constraints primaryKey="true" nullable="false" />
+        </column>
+    </addColumn>
+  
+  </changeSet> 
+  
+  <changeSet id="add-column-isnewversion-ut_operation_tree" author="a225356">
+  
+    <addColumn tableName="UT_OPERATION_TREE">
+        <column name="IS_NEW_VERSION" type="BOOLEAN" defaultValue="0">
+          <constraints nullable="false" />
+        </column>  
+    </addColumn>
+  
+  </changeSet> 
+  
+  <changeSet id="table-upload-tool-operation-conflict" author="a225356">
+
+      <createSequence cycle="false" incrementBy="1" sequenceName="UT_OPERATION_CONFLICT_SEQ" startValue="5000" />
+    
+      <createTable tableName="UT_OPERATION_CONFLICT">
+        <column name="ID" type="BIGINT">
+           <constraints primaryKey="true" nullable="false" />
+        </column>
+        <column name="OPERATION_ID" type="BIGINT">
+           <constraints nullable="false" />
+        </column>
+        <column name="CONFLICT_TYPE" type="VARCHAR(255)">
+           <constraints nullable="false" />
+        </column>
+        <column name="TREE_NODE_ID" type="BIGINT">
+           <constraints nullable="false" />
+        </column>
+     </createTable>
+           
+     <addForeignKeyConstraint 
+         baseColumnNames="OPERATION_ID" 
+         baseTableName="UT_OPERATION_CONFLICT" 
+         constraintName="UT_OP_CONFLICT_OP_FK" 
+         referencedColumnNames="ID"
+         referencedTableName="UT_OPERATION" /> 
+           
+     <addForeignKeyConstraint 
+         baseColumnNames="TREE_NODE_ID" 
+         baseTableName="UT_OPERATION_CONFLICT" 
+         constraintName="UT_OP_CONFLICT_TREENODE_FK" 
+         referencedColumnNames="NODE_ID"
+         referencedTableName="UT_OPERATION_TREE" />
+         
+     <sql>
+         create or replace public synonym UT_OPERATION_CONFLICT for "V0PHOENIX"."UT_OPERATION_CONFLICT";
+         create or replace public synonym UT_OPERATION_CONFLICT_SEQ for "V0PHOENIX"."UT_OPERATION_CONFLICT_SEQ";
+     </sql>
+
+     <rollback>
+         drop public synonym UT_OPERATION_CONFLICT_SEQ
+     </rollback>                   
+  </changeSet>
+  
+   <changeSet id="add-column-phoenix_obj_ref-ut_operation_tree" author="bpl3195">
+  
+    <addColumn tableName="UT_OPERATION_TREE">
+        <column name="PHOENIX_OBJ_REF" type="BIGINT"/>
+    </addColumn>
+  
+  </changeSet>  
+  <changeSet author="a232877" id="drop-has_metadata-column">
+    <dropColumn columnName="HAS_METADATA" schemaName="V0PHOENIX" tableName="UT_OPERATION_FILE" />
+  </changeSet>
+  <changeSet author="a232877" id="add-metadata-status-column">
+    <addColumn tableName="UT_OPERATION_TREE">
+      <column name="METADATA_STATUS" type="VARCHAR(255)"></column>
+    </addColumn>
+  </changeSet>
+  <changeSet author="a232877" id="drop-metadata-status">
+    <dropColumn columnName="METADATA_STATUS" schemaName="V0PHOENIX" tableName="UT_OPERATION_TREE" />
+  </changeSet>
+  <changeSet author="a232877" id="add-metadata-status-column2">
+    <addColumn tableName="UT_OPERATION_FILE">
+      <column name="METADATA_STATUS" type="VARCHAR(255)"></column>
+    </addColumn>
+  </changeSet>
+  
+  <changeSet id="add-column-absolute_path-ut_operation_tree" author="bpl3195">
+  
+    <addColumn tableName="UT_OPERATION_TREE">
+        <column name="ABSOLUTE_PATH" type="VARCHAR(1024)"/>
+    </addColumn>
+  
+  </changeSet>
+  
+  <changeSet id="add-timestamps-ut_operation" author="bpl3195">
+    <dropColumn columnName="MODIFIED_DATE" schemaName="V0PHOENIX" tableName="UT_OPERATION" />
+    <addColumn tableName="UT_OPERATION">
+        <column name="START_DATE" type="DATE"/>
+        <column name="FINISH_DATE" type="DATE"/>
+    </addColumn>
+  </changeSet>
+  
+  <changeSet id="add-filesize-ut_operation-file" author="bpl3195">
+    <addColumn tableName="UT_OPERATION_FILE">
+      <column name="FILE_SIZE" type="BIGINT"></column>
+    </addColumn>
+  </changeSet>
+  
+  <changeSet id="drop-column-isnewversion-ut_operation_tree" author="bpl3195">
+      <dropColumn columnName="IS_NEW_VERSION" schemaName="V0PHOENIX" tableName="UT_OPERATION_TREE" />
+  </changeSet>
+  
+</databaseChangeLog>

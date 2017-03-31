@@ -1,0 +1,27 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+     <changeSet id="1" author="jason">
+        <createTable tableName="DM_USER">
+            <column name="userid" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ROLEID" type="BIGINT" />
+            <column name="USERNAME" type="varchar(500)" />
+            <column name="ROLE" type="varchar(10)" />
+            <column name="REALNAME" type="varchar(10)" />
+            <column name="PASSWORD" type="varchar(255)" />
+            
+            <column name="ACTIVE_USER" type="varchar(255)" />
+            <column name="CHANGE_PASSWORD" type="varchar(255)" />
+
+            
+        </createTable>
+
+            
+    </changeSet>
+    
+</databaseChangeLog>

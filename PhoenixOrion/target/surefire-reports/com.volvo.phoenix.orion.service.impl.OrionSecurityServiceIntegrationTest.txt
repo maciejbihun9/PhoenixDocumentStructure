@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.volvo.phoenix.orion.service.impl.OrionSecurityServiceIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.226 sec - in com.volvo.phoenix.orion.service.impl.OrionSecurityServiceIntegrationTest

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+  <changeSet id="Release_Baseline" author="a225355">
+      <tagDatabase tag="Baseline"/>
+  </changeSet>
+  
+  <include file="../PhoenixDocumentManagementDomain/PhoenixDocumentStructure/src/main/resources/db-changelog-3.0.0.xml"/>
+  
+<!--   <include file="db-changelog-3.1.0.xml"/> -->
+
+  <changeSet id="Release_3.0.0" author="a225355">
+      <tagDatabase tag="3.0.0"/>
+  </changeSet>
+
+<!-- Remember about providing convenient queue with thoes chegeset tags. -->
+
+  <include file="../PhoenixDocumentManagementDomain/PhoenixDocumentStructure/src/main/resources/db-changelog-3.1.0.xml"/>
+  
+</databaseChangeLog> 

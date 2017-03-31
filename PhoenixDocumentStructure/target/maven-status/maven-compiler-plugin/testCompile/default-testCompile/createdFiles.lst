@@ -1,0 +1,17 @@
+com\volvo\phoenix\document\uploadtool\application\UploadToolServiceIntegrationTest.class
+com\volvo\phoenix\document\uploadtool\infrastructure\UploadToolRepositoryIntegrationTest.class
+com\volvo\phoenix\document\translator\DocumentAttributeTranslatorTest.class
+com\volvo\phoenix\document\translator\DocumentTranslatorTest.class
+com\volvo\phoenix\document\translator\DocumentAuditLogTranslatorTest.class
+com\volvo\phoenix\document\repository\FolderAuditLogRepositoryIntegrationTest.class
+com\volvo\phoenix\document\repository\DictionaryRepositoryIntegrationTest.class
+com\volvo\phoenix\document\repository\TransactionStackRepositoryIntegrationTest.class
+com\volvo\phoenix\document\repository\FolderRepositoryIntegrationTest.class
+com\volvo\phoenix\document\service\impl\DocumentAttributeRuleTest.class
+com\volvo\phoenix\document\entity\DocumentAuditLogTest.class
+com\volvo\phoenix\document\service\impl\CopyManagerServiceImplIntegrationTest.class
+com\volvo\phoenix\document\repository\OperationRepositoryIntegrationTest.class
+com\volvo\phoenix\document\translator\TranslatorTestObjectsFactory.class
+com\volvo\phoenix\document\repository\AttributeDefinitionRepositoryIntegrationTest.class
+com\volvo\phoenix\document\service\impl\TransactionStackServiceTest.class
+com\volvo\phoenix\document\uploadtool\infrastructure\UploadToolOperationConflictRepositoryIntegrationTest.class

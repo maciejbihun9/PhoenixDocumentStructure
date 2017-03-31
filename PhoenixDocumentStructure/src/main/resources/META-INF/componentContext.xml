@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	   xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+						   http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/task 
+                           http://www.springframework.org/schema/task/spring-task-3.0.xsd
+                           http://www.springframework.org/schema/data/jpa
+                           http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+						   http://www.springframework.org/schema/context
+						   http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/ldap 
+                           http://www.springframework.org/schema/ldap/spring-ldap.xsd">
+  <task:annotation-driven />
+  <!-- Base package to scan for @Named annotations -->
+  <context:component-scan base-package="com.volvo.phoenix.document" />
+  <context:annotation-config />
+
+  <!-- JPA EntityManagerFactory -->
+  <!-- Based on choice of implementation between OpenJPA and Hibernate,
+       parent attribute in bean should be set.
+       For OpenJPA: parent = "openJpaEntityManagerFactory"
+       For Hibernate: parent = "hibernateEntityManagerFactory" 
+  <bean id="PhoenixDocumentStructureEntityManagerFactory" parent="openJpaEntityManagerFactory">
+    <property name="persistenceUnitName" value ="PhoenixDocumentStructurePU" />
+  </bean>
+   -->
+  
+  <!-- For Hibernate implementation: JPA EntityManagerFactory -->
+  <bean id="PhoenixDocumentStructureEntityManagerFactory" parent="hibernateEntityManagerFactory">
+    <property name="persistenceUnitName" value ="PhoenixDocumentStructurePU" />
+  </bean>
+  
+  <jpa:repositories base-package="com.volvo.phoenix.document.repository" entity-manager-factory-ref="PhoenixDocumentStructureEntityManagerFactory" />
+  <jpa:repositories base-package="com.volvo.phoenix.document.uploadtool.infrastructure" entity-manager-factory-ref="PhoenixDocumentStructureEntityManagerFactory" />
+
+  <ldap:context-source id="contextSource" password="Fwt25!i" url="ldap://got.ad.volvo.net:389 " 
+    username="CN=it-got-TDM-Prod,OU=Service Accounts,OU=GOT,OU=IT,DC=vcn,DC=ds,DC=volvo,DC=net"/>
+
+   <ldap:ldap-template id="ldapTemplate" ignore-partial-result="true" />  
+   
+</beans>

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.volvo.phoenix.document.uploadtool.infrastructure.UploadToolOperationConflictRepositoryIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.666 sec - in com.volvo.phoenix.document.uploadtool.infrastructure.UploadToolOperationConflictRepositoryIntegrationTest

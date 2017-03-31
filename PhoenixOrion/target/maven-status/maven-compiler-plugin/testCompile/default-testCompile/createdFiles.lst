@@ -1,0 +1,5 @@
+com\volvo\phoenix\orion\repository\OrionGroupRepositoryIntegrationTest.class
+com\volvo\phoenix\orion\service\impl\OrionStorageServiceIntegrationTest.class
+com\volvo\phoenix\orion\service\impl\OrionSecurityServiceIntegrationTest.class
+com\volvo\phoenix\orion\repository\OrionDocumentRepositoryIntegrationTest.class
+com\volvo\phoenix\orion\repository\OrionUserRepositoryTest.class

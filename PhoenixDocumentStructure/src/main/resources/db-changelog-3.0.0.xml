@@ -1,0 +1,175 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+  <changeSet id="create-operation-table" author="bpld313">
+    
+    <createSequence cycle="false" incrementBy="1" sequenceName="CM_OPERATION_SEQ" startValue="1" />
+
+    <createTable tableName="CM_OPERATION">
+      <column name="ID" type="BIGINT">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="USERNAME" type="varchar(20)" />
+      <column name="SOURCE_ID" type="BIGINT" />
+      <column name="TARGET_FOLDER_ID" type="BIGINT" />
+      <column name="OPERATION_TYPE" type="varchar(100)" />
+      <column name="TYPE" type="varchar(20)" />
+      <column name="VERSION" type="BIGINT" />
+      <column name="CREATE_DATE" type="date" />
+      <column name="STATUS" type="varchar(100)" />
+    </createTable>
+    
+  </changeSet>
+  
+  <!-- this changes has to be removed after refactoring conflicts resolutions -->
+  <changeSet id="create-operation-param-table" author="bpld313">
+
+    <createTable tableName="CM_OPERATION_PARAM">
+      <column name="TASK_ID" type="BIGINT">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="SOLUTION" type="varchar(20)">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="PARAM_NAME" type="varchar(50)">
+        <constraints primaryKey="true" nullable="false" />
+      </column>      
+      <column name="PARAM_VALUE" type="varchar(255)" />
+    </createTable>
+    
+  </changeSet>
+  
+  <changeSet id="create-cm-audit-log" author="bpld313">
+  
+    <createSequence cycle="false" incrementBy="1" sequenceName="CM_AUDIT_LOG_SEQ" startValue="1" />
+  
+    <createTable tableName="CM_AUDIT_LOG">
+      <column name="ID" type="BIGINT">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="AUDIT_LOG_TYPE" type="varchar(500)" />
+      <column name="WHEN" type="date" />
+      <column name="USER_VCN_ID" type="varchar(10)" />
+      <column name="USER_FULL_NAME" type="varchar(255)" />
+      <column name="FROM_PATH" type="varchar(2048)">
+        <constraints nullable="false" />
+      </column>
+      <column name="TO_PATH" type="varchar(2048)">
+        <constraints nullable="false" />
+      </column>
+      <column name="OP_TYPE" type="varchar(20)" >
+        <constraints nullable="false" />
+      </column>
+      <column name="FROM_DOMAIN" type="varchar(255)" />
+      <column name="FROM_DOC_TYPE" type="varchar(255)" />
+      <column name="FROM_MANDATORY_ATTRIBUTES" type="varchar(4000)" />
+      <column name="FROM_OPTIONAL_ATTRIBUTES" type="varchar(4000)" />
+      <column name="TO_DOMAIN" type="varchar(255)" />
+      <column name="TO_DOC_TYPE" type="varchar(255)" />
+      <column name="TO_MANDATORY_ATTRIBUTES" type="varchar(4000)" />
+      <column name="TO_OPTIONAL_ATTRIBUTES" type="varchar(4000)" />
+
+    </createTable>
+
+
+    <!-- <createTable tableName="VT_PHOENIX_TREE">
+      <column name="NODE_ID" type="BIGINT">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="ACL_ID" type="BIGINT" />
+      <column name="NODE_PARENT_ID" type="BIGINT" />
+      <column name="OWNER_REALNAME" type="varchar(50)" />
+      <column name="NODE_TEXT" type="varchar(100)" />
+      <column name="NODE_TYPE" type="varchar(10)" />
+
+    </createTable>
+
+
+    <createSequence cycle="false" incrementBy="1" sequenceName="VT_PHOENIX_TREE_SEQ" startValue="1000" /> -->
+
+  </changeSet>
+  <changeSet id="create-pub-synonyms-operation,operation-paran,audit" author="bpl3195">
+     <sql>
+        create or replace public synonym CM_OPERATION for "V0PHOENIX"."CM_OPERATION";
+        create or replace public synonym CM_OPERATION_SEQ for "V0PHOENIX"."CM_OPERATION_SEQ";
+        create or replace public synonym CM_OPERATION_PARAM for "V0PHOENIX"."CM_OPERATION_PARAM";
+        CREATE OR REPLACE public synonym CM_AUDIT_LOG for "V0PHOENIX"."CM_AUDIT_LOG";
+        CREATE OR REPLACE public synonym CM_AUDIT_LOG_SEQ for "V0PHOENIX"."CM_AUDIT_LOG_SEQ"; 
+     </sql>
+    
+     <rollback>
+        drop public synonym CM_OPERATION for "V0PHOENIX"."CM_OPERATION";
+        drop public synonym CM_OPERATION_SEQ for "V0PHOENIX"."CM_OPERATION_SEQ";
+        drop public synonym CM_OPERATION_PARAM for "V0PHOENIX"."CM_OPERATION_PARAM";
+        drop public synonym CM_AUDIT_LOG for "V0PHOENIX"."CM_AUDIT_LOG";
+        drop public synonym CM_AUDIT_LOG_SEQ for "V0PHOENIX"."CM_AUDIT_LOG_SEQ";      
+     </rollback>
+  </changeSet>
+  
+  <changeSet id="create-view-VT_PHOENIX_DOCUMENT_CURRENT" author="bpl3195">
+       <sql>
+         CREATE OR REPLACE FORCE VIEW V0PHOENIX.VT_PHOENIX_DOCUMENT_CURRENT AS
+          SELECT DMO.REV, DMO.NAME, DM_ACL_STATE.NAME STATE_NAME, DMO.STATE_ID, DOC.* 
+          FROM VT_PHOENIX_DOCUMENT doc, DM_OBJECT dmo, DM_ACL_STATE 
+          WHERE doc.obj_id = dmo.obj_id
+          AND dmo.STATE_ID = DM_ACL_STATE.STATE_ID
+          AND dmo.cur = 'Y';
+       </sql>
+       <rollback>
+          drop view "V0PHOENIX"."VT_PHOENIX_DOCUMENT_CURRENT";
+       </rollback>
+  </changeSet>   
+  <changeSet id="add-constraints-VT_PHOENIX_DOMAIN_DOCTYPE" author="bpl3195">
+       <sql>
+          delete from VT_PHOENIX_DOMAIN_DOCTYPE WHERE DOCTYPE_ID NOT IN (select doctype_id from VT_PHOENIX_DOCTYPE);
+          ALTER TABLE V0PHOENIX.VT_PHOENIX_DOCTYPE ADD CONSTRAINT "PK_DOCTYPE_DOCTYPEID" PRIMARY KEY ("DOCTYPE_ID") ENABLE;
+          ALTER TABLE V0PHOENIX.VT_PHOENIX_DOMAIN_DOCTYPE ADD CONSTRAINT "FK_DOMAIN_DOCTYPE_DOCTYPEID" FOREIGN KEY ("DOCTYPE_ID")
+          	  REFERENCES V0PHOENIX.VT_PHOENIX_DOCTYPE ("DOCTYPE_ID") ENABLE;
+       </sql>
+       <rollback>
+          ALTER TABLE V0PHOENIX.VT_PHOENIX_DOMAIN_DOCTYPE DROP CONSTRAINT "FK_DOMAIN_DOCTYPE_DOCTYPEID";
+          ALTER TABLE V0PHOENIX.VT_PHOENIX_DOCTYPE DROP CONSTRAINT "PK_DOCTYPE_DOCTYPEID";
+       </rollback>
+  </changeSet>  
+        
+  <changeSet id="column-name-change-CM_OPERATION_PARAMS" author="a225355">
+      <renameColumn newColumnName="OPERATION_ID" oldColumnName="TASK_ID" schemaName="V0PHOENIX" tableName="CM_OPERATION_PARAM" />
+      <renameColumn newColumnName="PARAM_ID" oldColumnName="PARAM_NAME" schemaName="V0PHOENIX" tableName="CM_OPERATION_PARAM" />
+      <modifyDataType columnName="PARAM_ID" newDataType="BIGINT" schemaName="V0PHOENIX" tableName="CM_OPERATION_PARAM" />      
+  </changeSet>
+  
+  <changeSet id="sequence-for-CM_OPERATION_PARAMS" author="a225355">
+    <createSequence cycle="false" incrementBy="1" sequenceName="CM_OPERATION_PARAM_SEQ" startValue="1" />
+  </changeSet>
+  
+  <changeSet id="add-column-id-CM_OPERATION_PARAMS" author="a225355">      
+      <addColumn schemaName="V0PHOENIX" tableName="CM_OPERATION_PARAM">
+        <column name="ID" type="BIGINT"/>
+      </addColumn>                    
+  </changeSet>
+  
+  <changeSet id="create-pub-synonyms-operation-param-seq" author="a225355">
+     <sql>
+        create or replace public synonym CM_OPERATION_PARAM_SEQ for "V0PHOENIX"."CM_OPERATION_PARAM_SEQ";
+     </sql>
+    
+     <rollback>
+        drop public synonym CM_OPERATION_PARAM_SEQ for "V0PHOENIX"."CM_OPERATION_PARAM_SEQ";
+     </rollback>
+  </changeSet>
+
+  <changeSet id="constaint-for-VT_PHOENIX_DOMAIN_ATTRIBUTE" author="a225355">
+  
+       <addNotNullConstraint                  
+                  columnName="MANDATORY"                  
+                  schemaName="V0PHOENIX"
+                  tableName="VT_PHOENIX_DOMAIN_ATTRIBUTE"/>
+        <addNotNullConstraint                  
+                  columnName="SORT_ORDER"                  
+                  schemaName="V0PHOENIX"
+                  tableName="VT_PHOENIX_DOMAIN_ATTRIBUTE"/>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+
+    <artifactId>PhoenixDocumentManagementDomain</artifactId>
+    <groupId>se.volvo.it.tdm.phoenix</groupId>
+    <version>3.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>PhoenixDocumentStructure</artifactId>
+  <name>PhoenixDocumentStructure</name>
+  <packaging>jar</packaging>
+  <description>PhoenixDocumentStructure</description>
+
+  <build>
+    <!-- Comment out to disable OpenJPA Bytecode Enhancement -->
+    <!--plugins> <plugin> <groupId>org.apache.openjpa</groupId> <artifactId>openjpa-maven-plugin</artifactId> <version>2.2.0</version> <configuration> <includes>**/d/entities/*.class</includes> 
+      </configuration> <executions> <execution> <id>openjpa-enhancer</id> <phase>process-classes</phase> <goals> <goal>enhance</goal> </goals> </execution> </executions> 
+      </plugin> </plugins -->
+  </build>
+
+  <!-- Uncomment and add dependencies here -->
+  <!--dependencies> At bare minimum a dependency to the application config module is required here. </dependencies -->
+  <dependencies>
+    <dependency>
+      <groupId>com.oracle</groupId>
+      <artifactId>ojdbc6</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-jpa</artifactId>
+      <version>1.8.0.RELEASE</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.8.1</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.springframework.ldap</groupId>
+      <artifactId>spring-ldap-core</artifactId>
+      <version>2.0.4.RELEASE</version>
+    </dependency>
+
+    <dependency>
+      <groupId>se.volvo.it.tdm.phoenix</groupId>
+      <artifactId>PhoenixOrion</artifactId>
+      <version>3.1.0-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+</project>
